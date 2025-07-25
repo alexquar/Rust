@@ -44,6 +44,10 @@
 -&str
 -static
 -immutable
+-reference 
+-not an owned string a reference to another
+
+
 #### String
 -String
 -let mut thing: String = String::from("----")
@@ -55,4 +59,6 @@
 ##### Methods
 -append to a string
     -thing.push_str("----")
+-get a subset of a str
+    -thing[start..end];
 
