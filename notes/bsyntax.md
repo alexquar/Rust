@@ -8,7 +8,7 @@
     -println!("foo bar {}", y)
     -y is injected in placeholder
     - if it is an array us {:?}
-
+    - to select number of decimals use {:.n}
 ## Variables 
 
 ### Declarations 
