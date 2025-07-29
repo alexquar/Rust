@@ -1,52 +1,77 @@
-# Errors 
+# Errors
 
 ## Handling
 
-### Options
-- allows a thing to be none or the value 
-- here is an example 
-    - fn get(index: usize) -> Option<i32> {
-    let nums = vec![1, 2, 3];
-    nums.get(index).cloned()
+### Option
+
+- Represents a value that can be either `Some(T)` or `None`.
+- Example:
+    ```rust
+    fn get(index: usize) -> Option<i32> {
+        let nums = vec![1, 2, 3];
+        nums.get(index).cloned()
     }
-    - you then need to check if you value is i32 or None
-    - option looks like the following so check using a match statement 
+    ```
+- You need to check if the value is `Some(i32)` or `None`:
+    ```rust
+    match get(1) {
+        Some(val) => println!("Value: {}", val),
+        None => println!("No value found"),
+    }
+    ```
+- The `Option` enum:
+    ```rust
     enum Option<T> {
-    Some(T),
-    None,
+        Some(T),
+        None,
     }
+    ```
 
-### Panic 
-- terminates thread (aborts)
-    - panic!("Something went super wrong")
+### Panic
 
-### Recoverable errors
-- expected failures like file parsing or network stuff 
-- you will get back a template type of Result<T,E>
-    - the result type looks like enum Result<T,E>{ 
-        Ok(T), success data
-        Err(E), failure 
+- Terminates the current thread (aborts execution).
+    ```rust
+    panic!("Something went super wrong");
+    ```
+
+### Recoverable Errors
+
+- Used for expected failures (e.g., file parsing, network issues).
+- Rust uses the `Result<T, E>` type:
+    ```rust
+    enum Result<T, E> {
+        Ok(T),   // success
+        Err(E),  // failure
     }
-- use a match statement to check for data or error
-- example with file loading 
-    let result = File::open("thing.txt")
+    ```
+- Use a `match` statement to handle success or error:
+    ```rust
+    use std::fs::File;
+
+    let result = File::open("thing.txt");
     match result {
-        Ok(file) => {
-            println!("{:?}", file);
-        },
-        Err(e) => {
-            println!("Failure: {:?}", e)
-        }
+        Ok(file) => println!("{:?}", file),
+        Err(e) => println!("Failure: {:?}", e),
     }
-- can also use unwrap like we in our webserver basically just panics if we get an error else our result is the value 
-    - let file = File::open("file.txt").unwrap();
-    - can also add a .expect("Message") for if that request does fail to customize the message
-- ? operator to propogate the error up 
-- example 
-        fn read_file() -> Result<String, io::Error> {
-        let mut file = File::open("hello.txt")?;  // if error, return early
+    ```
+- You can use `.unwrap()` to get the value or panic on error:
+    ```rust
+    let file = File::open("file.txt").unwrap();
+    ```
+- Or use `.expect("Message")` to customize the panic message:
+    ```rust
+    let file = File::open("file.txt").expect("Failed to open file");
+    ```
+- The `?` operator propagates errors up the call stack:
+    ```rust
+    use std::fs::File;
+    use std::io::{self, Read};
+
+    fn read_file() -> Result<String, io::Error> {
+        let mut file = File::open("hello.txt")?;  // returns early on error
         let mut contents = String::new();
-        file.read_to_string(&mut contents)?;      // if error, return early
-        Ok(contents)                              // all good, return content
+        file.read_to_string(&mut contents)?;      // returns early on error
+        Ok(contents)
     }
-    - if the file load fails we will instantly return the error because of the ?
+    ```
+    - If any operation fails, the error is returned immediately.

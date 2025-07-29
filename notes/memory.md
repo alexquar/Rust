@@ -2,33 +2,57 @@
 
 ## Ownership
 
-### Ownership rules
-- each value in rust has an owner 
-- There can only be one owner at a time 
-- when the owner goes out of scope the value is dropped
-- can only havew one mutable reference or many immutable references 
+### Ownership Rules
 
+- Each value in Rust has a single owner.
+- There can only be one owner at a time.
+- When the owner goes out of scope, the value is dropped.
+- You can have either one mutable reference or multiple immutable references to a value at a time.
 
-### References
-- immutable by default
-- enables you to borrow a value without taking ownership (its just a pointer no?)
-- &variable_name
-- taking in a reference &type
+---
 
-### Making changes to the value of a reference
-- have to dereference *_r +=1
+## References
 
-### Making a reference mutable 
-- example the original needs to be a mut value then we take a mutable reference 
-    let mut x:i32 = 5;
+- References are immutable by default.
+- They allow you to borrow a value without taking ownership (they are just pointers).
+- Syntax: `&variable_name`
+- Function parameter: `&Type`
+
+---
+
+## Mutable References
+
+- To mutate through a reference, both the original value and the reference must be mutable.
+    ```rust
+    let mut x: i32 = 5;
     let r: &mut i32 = &mut x;
-    - we now have a reference to x in r that can be changes
+    *r += 1; // Dereference to modify the value
+    ```
+- You can only have one mutable reference to a value in a particular scope.
 
-### One owner
-- If you go s1 = String::from("RUST") and then s2=s1 then s2 now owns the value and takes over the value using s1 will not trigger an error
-- even if you call a function with the argument as your value and not take it as a reference then it is now the owner 
-- if you pass it by reference then it just "borrows" the value and you remain the owner 
+---
+
+## Ownership Transfer
+
+- Assigning ownership:
+    ```rust
+    let s1 = String::from("RUST");
+    let s2 = s1; // s1 is no longer valid, s2 owns the value
+    ```
+- Passing by value to a function transfers ownership.
+- Passing by reference (`&value`) allows borrowing, so the original owner retains ownership.
+
+---
 
 ## Borrowing
-- involved temp ownership through references &obj
-- to have mutable borrowed value you must use &mut
+
+- Borrowing involves temporary access to a value through references (`&obj`).
+- To borrow mutably, use `&mut`:
+    ```rust
+    fn modify(val: &mut i32) {
+        *val += 1;
+    }
+    ```
+- Only one mutable reference or multiple immutable references are allowed at a time.
+
+

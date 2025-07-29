@@ -6,7 +6,9 @@ use std::{io::{
     TcpListener
 }};
 mod utils;
-use utils::print_error;
+use utils::{
+    print_error,
+};
 
 fn main(){
     let listener = TcpListener::bind("127.0.0.1:8080").unwrap();

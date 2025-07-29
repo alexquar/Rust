@@ -1,61 +1,116 @@
-# Custom Types
+# Custom Types in Rust
 
-## Structs 
+## Structs
 
 ### Declaration
-- struct name {
-    field1:thing,
-    field2:thing,
+
+```rust
+struct Name {
+    field1: Type,
+    field2: Type,
 }
+```
 
-### Creation 
-- let thing = thing { thing1: value }
+### Creation
 
-### Implementations 
-- alows you to define functions on structs 
-    - create the stuct
-    - impl same_name{
-        fn method1(){}
-        fn method2(){
-            self.thing = method2value;
-        }
+```rust
+let thing = Name {
+    field1: value1,
+    field2: value2,
+};
+```
+
+### Implementations
+
+- Allows you to define functions (methods) on structs.
+- Use `impl` to implement methods:
+
+```rust
+impl Name {
+    fn method1(&self) {
+        // method body
     }
-- you get self as a refererence to member vars
-- construct and destruct but must call em
-    - fn new(val1: val) -> Self {
-        Self{val}
+
+    fn method2(&mut self, value: Type) {
+        self.field1 = value;
     }
-    -fn deactivate(&mut self) {
-        cleanup
+
+    // Constructor pattern
+    fn new(field1: Type, field2: Type) -> Self {
+        Self { field1, field2 }
     }
-- calling methods
-    - let mut thing = Thing::new(val);
-    - thing.deactivate()
 
-## Enums 
+    // Example of a cleanup method
+    fn deactivate(&mut self) {
+        // cleanup code
+    }
+}
+```
 
-### Declaration 
-- enum Thing { someting, something2}
+- `self` gives access to member variables.
+- Methods are called like:
 
-### Creation 
-- let thing = Role::Something
+```rust
+let mut thing = Name::new(val1, val2);
+thing.deactivate();
+```
+
+---
+
+## Enums
+
+### Declaration
+
+```rust
+enum Thing {
+    Variant1,
+    Variant2,
+}
+```
+
+### Creation
+
+```rust
+let thing = Thing::Variant1;
+```
+
+---
 
 ## Traits (Interfaces)
-- define a trait 
-    - trait Something{
-        fn something(&self)
-    }
-- implement that train on a struct 
-    - impl Something for Stuct {
-        fn something(&self){
-            ---
-        }
-    }
-- use this trait with .something() notation like normal instead of the ::something notation of 
 
-## Methods vs functions in rust
-- methods are associated functions that operate on a specific instance of an object for example they take a reference to self as a n argument
-- function do not and are called on the type itself not an instance 
-- ex
-    - function: String::from("---")
-    - method: my_string.len()
+- Define a trait:
+
+```rust
+trait Something {
+    fn something(&self);
+}
+```
+
+- Implement the trait for a struct:
+
+```rust
+impl Something for Name {
+    fn something(&self) {
+        // implementation
+    }
+}
+```
+
+- Use trait methods with dot notation: `thing.something()`
+
+---
+
+## Methods vs Functions in Rust
+
+- **Methods**: Associated functions that operate on a specific instance (take `&self` or `&mut self`).
+- **Functions**: Standalone or associated with a type, but do not take `self`.
+
+**Examples:**
+
+```rust
+// Function (associated, no self)
+let s = String::from("hello");
+
+// Method (called on an instance)
+let len = s.len();
+```

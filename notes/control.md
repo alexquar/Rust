@@ -1,40 +1,91 @@
-# Control Flow
+# Control Flow in Rust
 
-## Basic Conditions 
+## Conditionals
 
-### Conditionals 
-- all same conditional operators 
+### Basic Operators
+- Rust uses standard conditional operators (`==`, `!=`, `<`, `>`, `<=`, `>=`).
 
-### ifs
-- uses normal if, else if, else hierarchy
-- no brackets 
+### `if` Statements
+- Follows the typical `if`, `else if`, `else` hierarchy.
+- Braces `{}` are required for blocks, even for single statements.
 
-### Match statements 
-- case statements 
-    - match value{
-        something => ...
-        something else => ...
+```rust
+if condition {
+    // code
+} else if other_condition {
+    // code
+} else {
+    // code
+}
+```
+
+### `match` Statements
+- Similar to switch/case in other languages.
+- Pattern matching on values.
+
+```rust
+match value {
+    pattern1 => { /* code */ },
+    pattern2 => { /* code */ },
+    _ => { /* default */ },
+}
+```
+
+---
+
+## Loops
+
+### `for` Loops
+- Iterate over ranges or collections.
+
+```rust
+for i in start..stop {
+    // start is inclusive, stop is exclusive
+}
+for i in start..=stop {
+    // inclusive at both ends
+}
+for i in (start..stop).step_by(n) {
+    // custom step
+}
+for item in iterable {
+    // iterate over items
+}
+```
+
+### `while` Loops
+
+```rust
+while condition {
+    // code
+}
+```
+
+### Loop Control
+
+- `break` exits the current loop.
+- `continue` skips to the next iteration.
+- You can use labels to break out of outer loops:
+
+```rust
+'label: loop {
+    // ...
+    break 'label;
+}
+```
+
+---
+
+## Labels
+
+- Any loop can be labeled for more granular control with `break` or `continue`.
+
+```rust
+'outer: for i in 0..10 {
+    for j in 0..10 {
+        if some_condition {
+            break 'outer;
+        }
     }
-
-## Loops 
-
-### For loops 
-- basic counting loop 
-    - for i in start..stop{}
-    - this is inclusive at start but not at stop 
-    - to make inclusive at end use ..=
-    - to change step use (start...stop).step_by(n)
-- while loop 
-    - while bool {}
-- for in loops 
-    for thing in terable {}
-
-### Escaping
-- supports normal break syntax 
-- can use break with a label to break out of something other than the inner most loop
-    - break labl;
-- normal continue is supported
-
-## Labels 
-- can label any loop expression 
-    - name: while---{}
+}
+```

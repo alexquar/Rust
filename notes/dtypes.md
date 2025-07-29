@@ -1,88 +1,101 @@
-# Dtypes
+# Rust Data Types (Dtypes)
 
-##  basics
+## Basics
 
-### Other keywords
-- To make a variables changable must preceed the variable name with mut 
-    - Let mut name
-- declare using let 
-    - not mutable but variables can be shadowed (redeclared w a new value)
-- constants 
-    - const thing:i32 = 10000
-- static 
-    - allocated in global memory
-    - fix mem address 
-    - may be mutable with unsafe!
-    - static mut thing: type = ---
-    - unsafe { thing +=1; }
+- **Mutable Variables:**  
+    Use `mut` to make a variable mutable:  
+    ```rust
+    let mut name = value;
+    ```
+- **Variable Declaration:**  
+    Use `let` to declare variables (immutable by default, but can be shadowed):  
+    ```rust
+    let x = 5;
+    let x = x + 1; // shadowing
+    ```
+- **Constants:**  
+    Use `const` for compile-time constants (must specify type):  
+    ```rust
+    const THING: i32 = 10_000;
+    ```
+- **Static Variables:**  
+    Stored in global memory, fixed address, can be mutable with `unsafe`:  
+    ```rust
+    static mut THING: i32 = 0;
+    unsafe { THING += 1; }
+    ```
 
-## Primitives
+## Primitive Types
 
-### Ints 
--i8,i16,... (signed)(number of bits)
--u8,u16,... (unsigned)
+### Integers
 
+- Signed: `i8`, `i16`, `i32`, `i64`, `i128`, `isize`
+- Unsigned: `u8`, `u16`, `u32`, `u64`, `u128`, `usize`
 
-### Floats 
--f32, f64
+### Floats
 
+- `f32`, `f64`
 
-### Bools
-- true/false
+### Booleans
 
+- `true` / `false`
 
-### Chars 
--char 
--single quotes
+### Characters
+
+- `char` (single quotes, Unicode scalar values)
 
 ### None
-- same as none from python can check for is using == None 
 
+- Similar to Python's `None`, use `Option<T>` in Rust:  
+    ```rust
+    let x: Option<i32> = None;
+    if x == None { /* ... */ }
+    ```
 
-## Compound types
+## Compound Types
 
 ### Arrays
-- let numbers [i32; {size} ] = [1,2,3,...]
-- all same dtype
-- fixed size not a vector or list 
-- support normal [n] index accessing
+
+- Fixed-size, same type elements:  
+    ```rust
+    let numbers: [i32; 3] = [1, 2, 3];
+    let first = numbers[0];
+    ```
+
 ### Tuples
-- allows mixed types 
-- let thing: (&str, i32, bool) = ("Thing", 20, true)
-    - don't need type explicitely
-- access w .n
+
+- Can contain mixed types:  
+    ```rust
+    let thing: (&str, i32, bool) = ("Thing", 20, true);
+    let name = thing.0;
+    ```
+- Type annotation is optional.
 
 ### Vectors
 
-#### Creation 
-- let nums = vec![1,2,3,...]
+- Growable, heap-allocated arrays:  
+    ```rust
+    let nums = vec![1, 2, 3];
+    ```
+- Common methods:  
+    - `push`, `pop`, `len`, `get`, etc.
 
-#### Methods
-- 
+## String Types
 
-### String vs String Slices
+### String Slices (`&str`)
 
-#### String Slices
--&str
--static
--immutable
--reference 
--not an owned string a reference to another
+- Immutable reference to a string, not owned, static or borrowed:  
+    ```rust
+    let s: &str = "hello";
+    ```
 
+### `String`
 
-#### String
--String
--let mut thing: String = String::from("----")
--growable
--mutable
--owned (not borrowed)
--dynamic (on heap memory)
-
-##### Methods
--append to a string
-    -thing.push_str("----")
--get a subset of a str
-    -thing[start..end];
--get length
-    -s.len()
+- Growable, heap-allocated, owned string:  
+    ```rust
+    let mut thing: String = String::from("hello");
+    thing.push_str(" world");
+    let len = thing.len();
+    let subset = &thing[0..5];
+    ```
 
