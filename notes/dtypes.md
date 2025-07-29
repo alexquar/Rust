@@ -9,6 +9,12 @@
     - not mutable but variables can be shadowed (redeclared w a new value)
 - constants 
     - const thing:i32 = 10000
+- static 
+    - allocated in global memory
+    - fix mem address 
+    - may be mutable with unsafe!
+    - static mut thing: type = ---
+    - unsafe { thing +=1; }
 
 ## Primitives
 
