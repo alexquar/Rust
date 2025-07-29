@@ -64,7 +64,3 @@
 -get length
     -s.len()
 
-### Structs 
-- creation 
-    - 
-

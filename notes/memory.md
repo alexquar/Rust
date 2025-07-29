@@ -26,3 +26,9 @@
 
 ### One owner
 - If you go s1 = String::from("RUST") and then s2=s1 then s2 now owns the value and takes over the value using s1 will not trigger an error
+- even if you call a function with the argument as your value and not take it as a reference then it is now the owner 
+- if you pass it by reference then it just "borrows" the value and you remain the owner 
+
+## Borrowing
+- involved temp ownership through references &obj
+- to have mutable borrowed value you must use &mut
