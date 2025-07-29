@@ -61,4 +61,10 @@
     -thing.push_str("----")
 -get a subset of a str
     -thing[start..end];
+-get length
+    -s.len()
+
+### Structs 
+- creation 
+    - 
 
