@@ -2,9 +2,19 @@
 
 ## Basic Conditions 
 
+### Conditionals 
+- all same conditional operators 
+
 ### ifs
 - uses normal if, else if, else hierarchy
 - no brackets 
+
+### Match statements 
+- case statements 
+    - match value{
+        something => ...
+        something else => ...
+    }
 
 ## Loops 
 

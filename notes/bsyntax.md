@@ -4,6 +4,7 @@
 
 ### Printing
 -println!()
+-print!()
 -to put variables into string 
     -println!("foo bar {}", y)
     -y is injected in placeholder
