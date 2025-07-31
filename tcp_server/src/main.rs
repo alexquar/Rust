@@ -26,17 +26,36 @@ fn main(){
 
 fn hande_connection(mut stream: TcpStream){
    let buf_reader = BufReader::new(&stream);
-   let http_request: Vec <_> = buf_reader.lines().map(|line| line.unwrap()).take_while(|line| !line.is_empty()).collect();
-   println!("HTTP Request: {:?}", http_request);
-   let status = "HTTP/1.1 200 OK\r\n";
-   use std::env;
-   println!("Current working directory: {:?}", env::current_dir().unwrap());
-   let contents = fs::read_to_string("home.html").expect("Failed to read home.html. Check the working directory above.");
-   let length = contents.len();
-   let response = format!("{status}Content-Type: text/html\r\nContent-Length: {length}\r\n\r\n{contents}");  
-   let result = stream.write_all(response.as_bytes());
-   match result {
-         Ok(_) => println!("Response sent successfully."),
-         Err(e) => print_error(&format!("Failed to send response: {}", e)),
+   let request_line = buf_reader.lines().next().unwrap().unwrap();
+   if request_line == "GET / HTTP/1.1" {
+    let status = "HTTP/1.1 200 OK\r\n";
+    let contents = fs::read_to_string("./pages/home.html").expect("Failed to read home.html. Check the working directory above.");
+    let length = contents.len();
+    let response = format!("{status}Content-Type: text/html\r\nContent-Length: {length}\r\n\r\n{contents}");  
+    let result = stream.write_all(response.as_bytes());
+    match result {
+            Ok(_) => println!("Response sent successfully."),
+            Err(e) => print_error(&format!("Failed to send response: {}", e)),
+        }
+    } else if request_line == "GET /settings HTTP/1.1" {
+        let status = "HTTP/1.1 200 OK\r\n";
+        let contents = fs::read_to_string("./pages/settings.html").expect("Failed to read settings.html. Check the working directory above.");
+        let length = contents.len();
+        let response = format!("{status}Content-Type: text/html\r\nContent-Length: {length}\r\n\r\n{contents}");
+        let result = stream.write_all(response.as_bytes());
+        match result {
+            Ok(_) => println!("Response sent successfully."),
+            Err(e) => print_error(&format!("Failed to send response: {}", e)),
+        }
+    } else {
+        let status = "HTTP/1.1 404 Not Found\r\n";
+        let contents = fs::read_to_string("./pages/404.html").expect("Failed to read 404.html. Check the working directory above.");
+        let length = contents.len();
+        let response = format!("{status}Content-Type: text/html\r\nContent-Length: {length}\r\n\r\n{contents}");
+        let result = stream.write_all(response.as_bytes());
+        match result {
+            Ok(_) => println!("Response sent successfully."),
+            Err(e) => print_error(&format!("Failed to send response: {}", e)),
+        }
     }
 }
