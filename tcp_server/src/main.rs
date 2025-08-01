@@ -7,22 +7,22 @@ thread,
 time::Duration,
 collections::HashMap
 };
-mod utils;
-use utils::{
-    print_error,
-};
+mod thread_pool;
+use thread_pool::ThreadPool;
+
 
 fn main(){
     let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
-    
+    let pool = ThreadPool::new(4)
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
-                println!("Connection established!");
-                handle_connection(stream);
+                pool.execute(|| {
+                    handle_connection(stream);
+                });
             }
             Err(e) => {
-                print_error(&format!("Failed to establish a connection: {}", e));
+                println!("Failed to establish a connection: {}", e);
             }
         }
     }
@@ -39,7 +39,7 @@ fn handle_connection(mut stream: TcpStream) {
     let request_line = match buf_reader.lines().next() {
         Some(Ok(line)) => line,
         _ => {
-            print_error("Failed to read request line.");
+            println!("Failed to read request line.");
             return;
         }
     };
@@ -59,7 +59,7 @@ fn handle_connection(mut stream: TcpStream) {
     let contents = match fs::read_to_string(file_path) {
         Ok(c) => c,
         Err(_) => {
-            print_error(&format!("Failed to read {}. Check the working directory above.", file_path));
+            println!("Failed to read {}. Check the working directory above.", file_path);
             return;
         }
     };
@@ -69,6 +69,6 @@ fn handle_connection(mut stream: TcpStream) {
     let result = stream.write_all(response.as_bytes());
     match result {
         Ok(_) => println!("Response sent successfully."),
-        Err(e) => print_error(&format!("Failed to send response: {}", e)),
+        Err(e) => println!("Failed to send response: {}", e),
     }
 }
