@@ -13,7 +13,8 @@ use thread_pool::ThreadPool;
 
 fn main(){
     let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
-    let pool = ThreadPool::new(4)
+    println!("Server is running on port 8080...");
+    let pool = ThreadPool::new(4);
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
