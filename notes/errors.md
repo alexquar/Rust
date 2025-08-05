@@ -27,11 +27,16 @@
     }
     ```
 
-### Panic
+### Panic & Assert
 
 - Terminates the current thread (aborts execution).
     ```rust
     panic!("Something went super wrong");
+    ```
+
+- Assert words like normal, it checks a value and then panics with the provided message if it fails 
+    ```rust
+    assert!(size > 0, "Thread pool size must be greater than zero.");
     ```
 
 ### Recoverable Errors

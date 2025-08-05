@@ -98,4 +98,45 @@
     let len = thing.len();
     let subset = &thing[0..5];
     ```
+### JSON 
+- Use the [`serde`](https://serde.rs/) and [`serde_json`](https://docs.rs/serde_json/) crates for JSON serialization and deserialization.
+- **Add dependencies** in `Cargo.toml`:
+    ```toml
+    serde = { version = "1.0", features = ["derive"] }
+    serde_json = "1.0"
+    ```
+- **Deserialize JSON to struct:**
+    ```rust
+    use serde::Deserialize;
+
+    #[derive(Deserialize)]
+    struct Person {
+        name: String,
+        age: u8,
+    }
+
+    let data = r#"{"name":"Alice","age":30}"#;
+    let p: Person = serde_json::from_str(data)?;
+    ```
+- **Serialize struct to JSON:**
+    ```rust
+    use serde::Serialize;
+
+    #[derive(Serialize)]
+    struct Person {
+        name: String,
+        age: u8,
+    }
+
+    let p = Person { name: "Bob".into(), age: 25 };
+    let json = serde_json::to_string(&p)?;
+    ```
+- **Working with arbitrary JSON:**  
+    Use `serde_json::Value` for dynamic or unknown structures:
+    ```rust
+    use serde_json::Value;
+
+    let v: Value = serde_json::from_str(r#"{"a":1,"b":2}"#)?;
+    println!("{}", v["a"]);
+    ```
 
