@@ -59,6 +59,15 @@
         Err(e) => println!("Failure: {:?}", e),
     }
     ```
+- Can also match on the type of error that you found
+```rust
+    use std::io::ErrorKind;
+    match error.kind(){
+        ErrorKind::NotFound => ...
+        ErrorKind::... => ...
+        ...
+    }
+```
 - You can use `.unwrap()` to get the value or panic on error:
     ```rust
     let file = File::open("file.txt").unwrap();
