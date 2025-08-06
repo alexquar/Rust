@@ -1,4 +1,4 @@
-use core::ops::FnOnce;
+use core::{ops::FnOnce, result::Result::Err};
 use std::{sync::{
     mpsc,
     Arc,
@@ -6,7 +6,7 @@ use std::{sync::{
 }, thread};
 pub struct ThreadPool{
     workers: Vec<Worker>,
-    sender: mpsc::Sender<Job>,
+    sender: Option<mpsc::Sender<Job>>,
 }
 // Defines a type alias 'Job' for a boxed closure that takes no arguments, returns nothing,
 // can be sent across threads (Send), and has a 'static lifetime.
@@ -22,14 +22,34 @@ impl ThreadPool {
         for id in 0..size {
             workers.push(Worker::new(id, Arc::clone(&reciever)));
         }
-        ThreadPool { workers, sender }
+        ThreadPool { workers, sender: Some(sender) }
     }
     pub fn execute<F>(&self, f: F)
     where
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-        self.sender.send(job).unwrap();
+        if let Some(sender) = &self.sender {
+            sender.send(job).unwrap();
+        }
+    }
+}
+
+impl Drop for ThreadPool {
+    // The Drop trait allows you to customize what happens when a ThreadPool instance goes out of scope.
+    fn drop(&mut self) {
+        // Take the sender out of the ThreadPool, replacing it with None.
+        drop(self.sender.take());
+        // Iterate over all workers in the pool, draining them (removing all elements from the vector).
+        for worker in &mut self.workers.drain(..) {
+            // Print a message indicating which worker is being shut down.
+            println!("Shutting down worker {}", worker.id);
+            // Wait for the worker's thread to finish execution before continuing.
+            // `join()` blocks until the thread has exited.
+            // `unwrap()` will panic if the thread panicked.
+            worker.thread.join().unwrap();
+        }
+        // After this loop, all worker threads have been joined and cleaned up.
     }
 }
 
@@ -42,11 +62,18 @@ impl Worker {
     fn new(id: usize, reciever: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(move || {
             loop {
-                let job = reciever.lock().unwrap().recv().unwrap();
-                println!("Worker {} got a job; executing.", id);
-                job();
+                let job = reciever.lock().unwrap().recv();
+                match job {
+                    Ok(job) => {
+                        println!("Worker {} got a job; executing.", id);
+                        job();
+                }
+                Err(_) => {
+                    println!("Worker {} disconnected; shutting down.", id);
+                    break;
+                }
             }
-        });
+        }});
         Worker { id, thread}
     }
 }
